@@ -6,6 +6,7 @@ const registerUserController = async (req, res) => {
     try {
         const result = await registerUserService(name, password, email);
         return res.status(200).json(result);
+        
     } catch (err) {
         return res.status(401).json({ error: err.message });
     }
@@ -23,11 +24,10 @@ const loginUserController = async (req, res) => {
 };
 
 const forgotPasswordController = async (req, res) => {
-    const { email } = req.body;
-
     try {
-        const result = await forgotPasswordService(email);
+        const result = await forgotPasswordService(req.user.id);
         return res.status(200).json(result);
+
     } catch (err) {
         return res.status(401).json({ error: err.message });
     };
