@@ -83,5 +83,6 @@ const changePasswordService = async (userId, oldPassword, newPassword, repeatNew
 export {
     registerUserService,
     loginUserService,
-    forgotPasswordService
+    forgotPasswordService,
+    changePasswordService
 };
