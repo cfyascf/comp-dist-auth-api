@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { forgotPasswordController, loginUserController, registerUserController } from "../controllers/userController.js";
-import { authenticateToken } from "../middlewares/auth.js";
+import { forgotPasswordController, loginUserController, registerUserController, changePasswordController } from "../controllers/userController.js";
 
 const userRoutes = Router();
 
 userRoutes.post('/register', registerUserController);
 userRoutes.post('/login', loginUserController);
-userRoutes.post('/forgot-password', authenticateToken, forgotPasswordController);
+userRoutes.post('/forgot-password', forgotPasswordController);
+userRoutes.post('/change-password', changePasswordController);
 
 export default userRoutes;

@@ -1,4 +1,4 @@
-import { registerUserService, loginUserService, forgotPasswordService } from "../services/userService.js";
+import { registerUserService, loginUserService, forgotPasswordService, changePasswordService } from "../services/userService.js";
 
 const registerUserController = async (req, res) => {
     const { name, password, email } = req.body;
@@ -33,8 +33,21 @@ const forgotPasswordController = async (req, res) => {
     };
 };
 
+const changePasswordController = async (req, res) => {
+    const { userId, oldPassword, newPassword, repeatNewPassword } = req.body;
+
+    try {
+        const result = await changePasswordService(email);
+        return res.status(200).json(result);
+    } catch (err) {
+        return res.status(401).json({ error: err.message });
+    };
+};
+
+
 export { 
     registerUserController, 
     loginUserController, 
-    forgotPasswordController 
+    forgotPasswordController,
+    changePasswordController
 };
