@@ -5,7 +5,10 @@ const connectToDb = () => {
     const uri = process.env.MONGO_URI;
     if(!uri) throw new Error("Mongo URI missing.");
 
-    mongoose.connect(uri)
+    mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+        })
         .then(() => console.log(`Connected to ${uri}.`))
         .catch((error) => console.log('Error running server: ' + error));
 }
