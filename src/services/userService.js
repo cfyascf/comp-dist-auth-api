@@ -50,6 +50,33 @@ const forgotPasswordService = async (emailAsLogin) => {
     return { message: "Check your email to reset your password.", data: null };
 };
 
+const changePasswordService = async (userId, oldPassword, newPassword, repeatNewPassword) => {
+    const user = await User.findById( userId );
+
+    if(!user) 
+        throw new Error("User does not exists.");
+
+    if(oldPassword != user.password){
+        throw new Error("Password does not match.");
+    }
+
+    if(oldPassword == newPassword){
+        throw new Error("Password matches the old one.");
+    }
+
+    if(newPassword != repeatNewPassword){
+        throw new Error("Passwords does not match.");
+    }
+
+    user.password = newPassword;
+    user.save();
+
+    const userObject = user.toObject();
+    delete userObject.password;
+
+    return { message: "Updated password sucessfully.", data: userObject };
+};
+
 export {
     registerUserService,
     loginUserService,
