@@ -12,5 +12,6 @@ app.use(express.json());
 
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/admin', userRoutes);
+app.get('/', (req, res) => res.send('App rodando no Azure!'));
 
 export default app;

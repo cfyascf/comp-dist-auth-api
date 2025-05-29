@@ -6,7 +6,7 @@ try {
     connectToDb();
     
     // ..run server
-    const port = process.env.SERVER_PORT;
+    const port = process.env.SERVER_PORT || 3000;
     if(!port) throw new Error("Server port config missing.");
 
     app.listen(port, () => console.log(`Server running on port ${port}.`));
