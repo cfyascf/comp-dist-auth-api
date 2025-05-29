@@ -1,75 +1,3 @@
-# # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# # More GitHub Actions for Azure: https://github.com/Azure/actions
-
-# name: Build and deploy Node.js app to Azure Web App - comp-dist-webapp
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
-
-# jobs:
-#   build:
-#     runs-on: windows-latest
-#     permissions:
-#       contents: read 
-
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           path: .  
-
-#       - name: Set up Node.js version
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '22.x'
-
-#       - name: npm install, build, and test
-#         run: |
-#           npm install
-#         working-directory: .
-
-#       - name: Upload artifact for deployment job
-#         uses: actions/upload-artifact@v4
-#         with: 
-#           name: node-app
-#           path: .
-
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     environment:
-#       name: 'Production'
-#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-#     permissions:
-#       id-token: write #This is required for requesting the JWT
-#       contents: read #This is required for actions/checkout
-
-#     steps:
-#       - name: Download artifact from build job
-#         uses: actions/download-artifact@v4
-#         with:
-#           name: node-app
-      
-#       - name: Login to Azure
-#         uses: azure/login@v2
-#         with:
-#           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_22DD91C461D34C2B8C1655A7E6B65F21 }}
-#           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_145B6DE940FA42138EE756F4FF638625 }}
-#           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4101A98294EF4889AD64677615C41157 }}
-
-#       - name: 'Deploy to Azure Web App'
-#         uses: azure/webapps-deploy@v3
-#         id: deploy-to-webapp
-#         with:
-#           app-name: 'comp-dist-webapp'
-#           slot-name: 'Production'
-#           package: .
-
-
-# ---------------------------------
-          
 name: Build and deploy Node.js app to Azure Web App - comp-dist-webapp
 
 on:
@@ -79,19 +7,43 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
       - name: npm install
         run: npm install
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: .
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: node-app
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -102,6 +54,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
+        id: deploy-to-webapp
         with:
           app-name: 'comp-dist-webapp'
           slot-name: 'Production'
